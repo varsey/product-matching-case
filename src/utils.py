@@ -14,14 +14,21 @@ flt_chars = [
     '✔', '⇒', '"', '$', '%', '&', "'", ',', '^', '`', '{', '}', "('",
 ]
 
-stop_words = (nltk.corpus.stopwords.words('russian')
-              + nltk.corpus.stopwords.words('english')
-              + nltk.corpus.stopwords.words('azerbaijani'))
-exclude = [x for x in set(stop_words + flt_chars) if len(x) > 0] + ['pet']
-exclude.remove('up')
-exclude.remove('s')
-exclude.remove('ya')
-exclude = set(exclude)
+
+def get_excluded_list():
+    stop_words = (
+            nltk.corpus.stopwords.words('russian')
+            +
+            nltk.corpus.stopwords.words('english')
+            +
+            nltk.corpus.stopwords.words('azerbaijani')
+    )
+    exclude = [x for x in set(stop_words + flt_chars) if len(x) > 0] + ['pet']
+    exclude.remove('up')
+    exclude.remove('s')
+    exclude.remove('ya')
+    return set(exclude)
+
 
 kw_extractor = yake.KeywordExtractor(
     n=2,
@@ -33,7 +40,7 @@ kw_extractor = yake.KeywordExtractor(
 )
 
 
-def simple_process_item(x: str):
+def simple_process_item(x: str, exclude: list):
     x = x.lower()
     for char in remove_chars.keys():
         x = x.replace(char, ' ')
