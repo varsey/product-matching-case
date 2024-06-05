@@ -1,0 +1,7 @@
+yake~=0.4.8
+nltk~=3.8.1
+regex
+pandas
+rapidfuzz
+openpyxl
+fastparquet
