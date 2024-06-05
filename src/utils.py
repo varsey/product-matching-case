@@ -1,18 +1,12 @@
 import re
 
+import yake
 import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('averaged_perceptron_tagger_ru')
-import yake
 
-from .consts import remove_chars, replace_chars
-
-flt_chars = [
-    ')', '(', ',', '!', '', ':', '|', '>', '<', '[', ']', '...', './', '/\n', '\xa0',
-    '«', '»', '_', '?', '~', '=', '\\', ';', '\n', '``', "''", '✅', '/n', '/', '..', '`', "'", '-',
-    '✔', '⇒', '"', '$', '%', '&', "'", ',', '^', '`', '{', '}', "('",
-]
+from .consts import remove_chars, replace_chars, flt_chars
 
 
 def get_excluded_list():
@@ -28,16 +22,6 @@ def get_excluded_list():
     exclude.remove('s')
     exclude.remove('ya')
     return set(exclude)
-
-# Extractor of key words for parent and product groups names extracting
-kw_extractor = yake.KeywordExtractor(
-    n=2,
-    dedupLim=0.5,
-    dedupFunc='sequencematcher',
-    windowsSize=2,
-    top=3,
-    features=None
-)
 
 
 def simple_process_item(x: str, exclude: list):
@@ -93,6 +77,17 @@ def remove_numbers(text):
     text = re.sub(r'\d+', '', text)
     text = ' '.join(text.split('.'))
     return ' '.join([x for x in text.split() if len(x) > 2 and x not in ('pct', 'dad')][:3])
+
+
+# Extractor of key words for parent and product groups names extracting
+kw_extractor = yake.KeywordExtractor(
+    n=2,
+    dedupLim=0.5,
+    dedupFunc='sequencematcher',
+    windowsSize=2,
+    top=3,
+    features=None
+)
 
 
 def get_product_group(word: str):
